@@ -1,4 +1,5 @@
 import {
+  Avatar,
   Button,
   Card,
   CardActions,
@@ -28,11 +29,23 @@ export const Home = () => {
         {isEntered ? (
           <CheckParkingStatus parkingLot={resort} day={date!} />
         ) : (
-          <>
-            <Typography variant="h1" gutterBottom>
-              Parking Poller
+          <Stack sx={{ alignItems: "center" }}>
+            <Stack
+              direction="row"
+              gap={2}
+              justifyContent={"center"}
+              alignItems={"center"}
+            >
+              <Avatar src="/polar-bear.jpg" sx={{ width: 80, height: 80 }} />
+              <Typography variant="h1" noWrap>
+                Parking Polar
+              </Typography>
+            </Stack>
+            <Typography color="text.secondary" sx={{ textAlign: "center" }}>
+              Poll parking to check availability at Alta or Brighton.
+              <br /> Be alerted when someone cancels!
             </Typography>
-            <Card>
+            <Card sx={{ mt: 4 }}>
               <CardContent>
                 <Stack direction="row" gap={2}>
                   <FormControl fullWidth>
@@ -69,7 +82,7 @@ export const Home = () => {
                 </Button>
               </CardActions>
             </Card>
-          </>
+          </Stack>
         )}
       </Container>
     </Stack>
