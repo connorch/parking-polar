@@ -1,14 +1,52 @@
 import { useQuery } from "@tanstack/react-query";
-import { fetchBrightonParking } from "../api/fetch-brighton-parking";
+import {
+  ParkingDataAlta,
+  ParkingDataBrighton,
+  fetchAltaParking,
+  fetchBrightonParking,
+} from "../api/fetch-parking";
 import { useMemo } from "react";
 import AudioPlayer from "react-h5-audio-player";
+import { Link } from "@mui/material";
 
-const DATES_TO_CHECK = ["2024-03-23", "2024-01-14"] as const;
+const DATES_TO_CHECK = ["2024-01-27"] as const;
 
-export const CheckParkingStatus = () => {
+const parkingLotConfigs = {
+  alta: {
+    id: "alta",
+    name: "Alta",
+    reservationSite: "https://reserve.altaparking.com/",
+    fetcher: fetchAltaParking,
+    getSpacesAvailable: (data: ParkingDataAlta[string]) => {
+      return data.available_spaces;
+    },
+  },
+  brighton: {
+    id: "brighton",
+    name: "Brighton",
+    reservationSite: "https://reservenski.parkbrightonresort.com/",
+    fetcher: fetchBrightonParking,
+    getSpacesAvailable: (data: ParkingDataBrighton[string]) => {
+      return data.general.available_spaces;
+    },
+  },
+};
+
+export const CheckParkingStatus = ({
+  parkingLot,
+}: {
+  parkingLot: keyof typeof parkingLotConfigs;
+}) => {
+  const parkingLotConfig = parkingLotConfigs[parkingLot];
   const { data, dataUpdatedAt } = useQuery({
-    queryKey: ["brighton-parking-status"],
-    queryFn: fetchBrightonParking,
+    queryKey: [parkingLotConfig, "brighton-parking-status"],
+    queryFn: ({ queryKey }): Promise<ParkingDataAlta | ParkingDataBrighton> => {
+      const config = queryKey[0];
+      if (typeof config === "string") {
+        throw new Error("Config is a string");
+      }
+      return config.fetcher();
+    },
     refetchInterval: 10000,
   });
 
@@ -26,9 +64,10 @@ export const CheckParkingStatus = () => {
         );
       }
 
-      return dateData.general.available_spaces > 0;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      return parkingLotConfig.getSpacesAvailable(dateData as any);
     });
-  }, [data]);
+  }, [data, parkingLotConfig]);
 
   return (
     <div
@@ -42,20 +81,20 @@ export const CheckParkingStatus = () => {
       {isAvailableParking ? (
         <>
           <h2 className="rainbow rainbow_text_animated">
-            PARKING AVAILABLE!!!
+            PARKING AVAILABLE AT {parkingLotConfig.name.toUpperCase()}!!!
           </h2>
-          <a
-            href="https://www.parkbrightonresort.com/reservenski"
+          <Link
+            href={parkingLotConfig.reservationSite}
             target="_blank"
             rel="noopener noreferrer"
           >
             Go Reserve Fast!
-          </a>
+          </Link>
         </>
       ) : (
         <>
           <h2 style={{ textAlign: "center", display: "inline-flex" }}>
-            Checking Parking Status...
+            Checking Parking Status for {parkingLotConfig.name}...
           </h2>
           <p>Parking still not available 😔</p>
         </>
