@@ -5,7 +5,7 @@ import {
   fetchAltaParking,
   fetchBrightonParking,
 } from "../api/fetch-parking";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import AudioPlayer from "react-h5-audio-player";
 import { CircularProgress, Link, Typography } from "@mui/material";
 import dayjs, { Dayjs } from "dayjs";
@@ -77,6 +77,16 @@ export const CheckParkingStatus = ({
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return parkingLotConfig.getSpacesAvailable(dateData as any) > 0;
   }, [data, day, parkingLotConfig]);
+
+  // Log it for debugging
+  useEffect(() => {
+    if (isAvailableParking) {
+      console.log(
+        "Parking available!",
+        dayjs(dataUpdatedAt).format("hh:mm:ssa")
+      );
+    }
+  }, [isAvailableParking, dataUpdatedAt]);
 
   return (
     <div
