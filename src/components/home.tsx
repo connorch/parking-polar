@@ -1,11 +1,13 @@
 import {
   Avatar,
+  Box,
   Button,
   Card,
   CardActions,
   CardContent,
   Container,
   FormControl,
+  IconButton,
   InputLabel,
   MenuItem,
   Select,
@@ -16,6 +18,7 @@ import { useState } from "react";
 import { CheckParkingStatus } from "./check-parking-status";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs, { Dayjs } from "dayjs";
+import { Github } from "lucide-react";
 
 export const Home = () => {
   const [isEntered, setEntered] = useState(false);
@@ -23,8 +26,23 @@ export const Home = () => {
   const [date, setDate] = useState<Dayjs | null>(dayjs(Date.now()));
 
   return (
-    <Stack sx={{ width: "100vw", justify: "center" }}>
-      <Container maxWidth="sm">
+    <Stack
+      sx={{
+        width: "100vw",
+        height: "100vh",
+        justify: "center",
+        alignItems: "center",
+      }}
+    >
+      <Container
+        maxWidth="sm"
+        sx={{
+          display: "flex",
+          flexGrow: 1,
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
         {/* Force page interaction so that sound plays. */}
         {isEntered ? (
           <CheckParkingStatus parkingLot={resort} day={date!} />
@@ -85,6 +103,16 @@ export const Home = () => {
           </Stack>
         )}
       </Container>
+      <Box sx={{ py: 2 }}>
+        <IconButton
+          component="a"
+          href="https://github.com/connorch/parking-polar"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <Github />
+        </IconButton>
+      </Box>
     </Stack>
   );
 };

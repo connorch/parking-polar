@@ -1,3 +1,7 @@
+#root {
+  height: 100vh;
+}
+
 #shadowBox {
   background-color: rgb(0, 0, 0);
   /* Fallback color */
