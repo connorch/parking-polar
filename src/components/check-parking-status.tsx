@@ -101,7 +101,7 @@ export const CheckParkingStatus = ({
             Polling parking status for {parkingLotConfig.name}...
           </Typography>
           <Typography variant="h4" gutterBottom>
-            Parking still not available 😔
+            Parking is full 😔
           </Typography>
         </>
       )}
