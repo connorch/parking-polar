@@ -7,8 +7,8 @@ import {
 } from "../api/fetch-parking";
 import { useMemo } from "react";
 import AudioPlayer from "react-h5-audio-player";
-import { Link } from "@mui/material";
-import { Dayjs } from "dayjs";
+import { CircularProgress, Link, Typography } from "@mui/material";
+import dayjs, { Dayjs } from "dayjs";
 
 const parkingLotConfigs = {
   alta: {
@@ -39,14 +39,20 @@ export const CheckParkingStatus = ({
   parkingLot: keyof typeof parkingLotConfigs;
 }) => {
   const parkingLotConfig = parkingLotConfigs[parkingLot];
-  const { data, dataUpdatedAt } = useQuery({
+  const { data, dataUpdatedAt, isFetching } = useQuery({
     queryKey: [parkingLotConfig, "brighton-parking-status"],
     queryFn: ({ queryKey }): Promise<ParkingDataAlta | ParkingDataBrighton> => {
       const config = queryKey[0];
       if (typeof config === "string") {
         throw new Error("Config is a string");
       }
-      return config.fetcher();
+
+      // get offset for query
+      const monthOffset = day.month();
+      const start = 30 * monthOffset + 1;
+      const end = 30 * monthOffset + 31;
+
+      return config.fetcher({ start, end });
     },
     refetchInterval: 10000,
   });
@@ -72,7 +78,6 @@ export const CheckParkingStatus = ({
   return (
     <div
       style={{
-        width: "100vw",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
@@ -93,15 +98,18 @@ export const CheckParkingStatus = ({
         </>
       ) : (
         <>
-          <h2 style={{ textAlign: "center", display: "inline-flex" }}>
-            Checking Parking Status for {parkingLotConfig.name}...
-          </h2>
-          <p>Parking still not available 😔</p>
+          <Typography color="text.secondary" gutterBottom>
+            Polling parking status for {parkingLotConfig.name}...
+          </Typography>
+          <Typography variant="h4" gutterBottom>
+            Parking still not available 😔
+          </Typography>
         </>
       )}
-      <p>
-        Last checked at <span>{new Date(dataUpdatedAt).toTimeString()}</span>
-      </p>
+      <Typography variant="caption">
+        Last checked at <span>{dayjs(dataUpdatedAt).format("hh:mm:ssa")}</span>{" "}
+        {isFetching && <CircularProgress size={9} />}
+      </Typography>
 
       <AudioPlayer
         autoPlay={isAvailableParking}
