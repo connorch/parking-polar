@@ -98,7 +98,8 @@ export const CheckParkingStatus = ({
       ) : (
         <>
           <Typography color="text.secondary" gutterBottom>
-            Polling parking status for {parkingLotConfig.name}...
+            Polling parking status for {parkingLotConfig.name} on{" "}
+            {day?.format("ddd, M/DD")}...
           </Typography>
           <Typography variant="h4" gutterBottom>
             Parking is full 😔
