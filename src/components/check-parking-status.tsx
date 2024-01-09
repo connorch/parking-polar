@@ -8,8 +8,7 @@ import {
 import { useMemo } from "react";
 import AudioPlayer from "react-h5-audio-player";
 import { Link } from "@mui/material";
-
-const DATES_TO_CHECK = ["2024-01-27"] as const;
+import { Dayjs } from "dayjs";
 
 const parkingLotConfigs = {
   alta: {
@@ -34,7 +33,9 @@ const parkingLotConfigs = {
 
 export const CheckParkingStatus = ({
   parkingLot,
+  day,
 }: {
+  day: Dayjs;
   parkingLot: keyof typeof parkingLotConfigs;
 }) => {
   const parkingLotConfig = parkingLotConfigs[parkingLot];
@@ -54,20 +55,19 @@ export const CheckParkingStatus = ({
     if (!data) {
       return false;
     }
+    const dateString = day?.format("YYYY-MM-DD");
+    console.log("dateString :>> ", dateString);
+    const key = Object.keys(data).find((k) => k.startsWith(dateString));
+    const dateData = key ? data[key] : undefined;
+    if (!dateData) {
+      throw new Error(
+        "Unable to find the date.  Make sure the date string is formatted correctly and that the MONTH is correct."
+      );
+    }
 
-    return DATES_TO_CHECK.some((dateString) => {
-      const key = Object.keys(data).find((k) => k.startsWith(dateString));
-      const dateData = key ? data[key] : undefined;
-      if (!dateData) {
-        throw new Error(
-          "Unable to find the date.  Make sure the date string is formatted correctly and that the MONTH is correct."
-        );
-      }
-
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      return parkingLotConfig.getSpacesAvailable(dateData as any);
-    });
-  }, [data, parkingLotConfig]);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return parkingLotConfig.getSpacesAvailable(dateData as any) > 0;
+  }, [data, day, parkingLotConfig]);
 
   return (
     <div

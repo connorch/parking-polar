@@ -18,7 +18,7 @@ export type ParkingDataAlta = Record<
   }
 >;
 
-const MONTH_OFFSET = 0;
+const MONTH_OFFSET = 2;
 
 export const fetchBrightonParking = async (): Promise<ParkingDataBrighton> => {
   const startDateParam = 30 * MONTH_OFFSET + 1;
