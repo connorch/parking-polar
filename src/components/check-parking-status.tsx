@@ -9,6 +9,10 @@ import { useMemo } from "react";
 import AudioPlayer from "react-h5-audio-player";
 import { CircularProgress, Link, Typography } from "@mui/material";
 import dayjs, { Dayjs } from "dayjs";
+import { focusManager } from "@tanstack/react-query";
+
+// Set focused even when tab isn't active to ensure we continue fetching in the background
+focusManager.setFocused(true);
 
 const parkingLotConfigs = {
   alta: {
@@ -54,7 +58,7 @@ export const CheckParkingStatus = ({
 
       return config.fetcher({ start, end });
     },
-    refetchInterval: 10000,
+    refetchInterval: 5000,
   });
 
   const isAvailableParking = useMemo(() => {
