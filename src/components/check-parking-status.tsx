@@ -62,7 +62,6 @@ export const CheckParkingStatus = ({
       return false;
     }
     const dateString = day?.format("YYYY-MM-DD");
-    console.log("dateString :>> ", dateString);
     const key = Object.keys(data).find((k) => k.startsWith(dateString));
     const dateData = key ? data[key] : undefined;
     if (!dateData) {
@@ -115,9 +114,6 @@ export const CheckParkingStatus = ({
         autoPlay={isAvailableParking}
         autoPlayAfterSrcChange
         src={isAvailableParking ? "/rolled.mp3" : undefined}
-        onEnded={(e) => {
-          console.log("e :>> ", e);
-        }}
         style={{
           visibility: "hidden",
         }}

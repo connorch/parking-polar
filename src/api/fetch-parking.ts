@@ -22,7 +22,6 @@ export const fetchBrightonParking = async (range: {
   start: number;
   end: number;
 }): Promise<ParkingDataBrighton> => {
-  console.log("range :>> ", range);
   return fetch(
     "https://platform.honkmobile.com/graphql?honkGUID=6qqe5s3jyzdrgth1onq0qh",
     {
