@@ -10,8 +10,16 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@emotion/react": "^11.11.3",
+    "@emotion/styled": "^11.11.0",
+    "@mui/material": "^5.15.3",
+    "@tanstack/react-query": "^5.17.9",
+    "play-sound": "^1.1.6",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-h5-audio-player": "^3.9.1",
+    "react-player": "^2.14.1",
+    "react-use-audio-player": "^2.2.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.43",
